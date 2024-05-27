@@ -1,6 +1,9 @@
 package com.site.springboot.core.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.springboot.core.dao.NewsCommentMapper;
+import com.site.springboot.core.entity.News;
 import com.site.springboot.core.entity.NewsComment;
 import com.site.springboot.core.service.CommentService;
 import com.site.springboot.core.util.PageQueryUtil;
@@ -8,33 +11,68 @@ import com.site.springboot.core.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl extends ServiceImpl<NewsCommentMapper, NewsComment> implements CommentService {
     @Autowired
     private NewsCommentMapper newsCommentMapper;
 
     @Override
     public Boolean addComment(NewsComment newsComment) {
-        return newsCommentMapper.insertSelective(newsComment) > 0;
+        return this.save(newsComment);
+        // return newsCommentMapper.insertSelective(newsComment) > 0;
     }
 
     @Override
     public PageResult getCommentsPage(PageQueryUtil pageUtil) {
-        List<NewsComment> comments = newsCommentMapper.findNewsCommentList(pageUtil);
-        int total = newsCommentMapper.getTotalNewsComments(pageUtil);
+        List<NewsComment> comments = this.findNewsCommentList(pageUtil);
+        int total = this.getTotalNewsComments(pageUtil);
         PageResult pageResult = new PageResult(comments, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
     }
+    public List<NewsComment> findNewsCommentList(Map<String, Object> params) {
+        QueryWrapper<NewsComment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", 0).orderByDesc("comment_id");
+
+        // 如果存在start和limit参数，模拟分页查询，然后取所有页的数据
+        int start = (int) params.getOrDefault("start", 0);
+        int limit = (int) params.getOrDefault("limit", Integer.MAX_VALUE);
+        queryWrapper.last("limit " + start + ", " + limit);
+
+        return list(queryWrapper);
+    }
+    public int getTotalNewsComments(Map<String, Object> params) {
+        QueryWrapper<NewsComment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", 0);
+
+        return (int)count(queryWrapper);
+    }
+
 
     @Override
     public Boolean checkDone(Integer[] ids) {
-        return newsCommentMapper.checkDone(ids) > 0;
+        // List<Integer> ids = Arrays.asList(commentIds);
+        QueryWrapper<NewsComment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("comment_id", ids).eq("comment_status", 0);
+
+        List<NewsComment> comments = list(queryWrapper);
+        List<NewsComment> commentsToUpdate = new ArrayList<>();
+
+        for (NewsComment comment : comments) {
+            comment.setCommentStatus((byte) 1);
+            commentsToUpdate.add(comment);
+        }
+        return updateBatchById(commentsToUpdate);
+        // return newsCommentMapper.checkDone(ids) > 0;
     }
 
     @Override
     public Boolean deleteBatch(Integer[] ids) {
-        return newsCommentMapper.deleteBatch(ids) > 0;
+        return this.removeByIds(Arrays.asList(ids));
+        // return newsCommentMapper.deleteBatch(ids) > 0;
     }
 }

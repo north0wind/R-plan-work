@@ -1,5 +1,8 @@
 package com.site.springboot.core.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.springboot.core.dao.NewsMapper;
 import com.site.springboot.core.entity.News;
 import com.site.springboot.core.service.NewsService;
@@ -8,44 +11,67 @@ import com.site.springboot.core.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class NewsServiceImpl implements NewsService {
+public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements NewsService {
 
     @Autowired
     private NewsMapper newsMapper;
 
     @Override
     public String saveNews(News news) {
-        if (newsMapper.insertSelective(news) > 0) {
-            return "success";
-        }
-        return "保存失败";
+        boolean b = this.save(news);
+        return this.save(news) ? "success" : "保存失败";
+        // if (newsMapper.insertSelective(news) > 0) {
+        //     return "success";
+        // }
+        // return "保存失败";
+
     }
 
     @Override
     public PageResult getNewsPage(PageQueryUtil pageUtil) {
-        List<News> newsList = newsMapper.findNewsList(pageUtil);
-        int total = newsMapper.getTotalNews(pageUtil);
+        List<News> newsList = this.findNewsList(pageUtil);
+        int total = this.getTotalNews(pageUtil);
         PageResult pageResult = new PageResult(newsList, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
+    }
+    public List<News> findNewsList(Map<String, Object> params) {
+        QueryWrapper<News> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", 0).orderByDesc("news_id");
+
+        // 如果存在start和limit参数，模拟分页查询，然后取所有页的数据
+        int start = (int) params.getOrDefault("start", 0);
+        int limit = (int) params.getOrDefault("limit", Integer.MAX_VALUE);
+        queryWrapper.last("limit " + start + ", " + limit);
+
+        return list(queryWrapper);
+    }
+    public int getTotalNews(Map<String, Object> params) {
+        QueryWrapper<News> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", 0);
+
+        return (int)count(queryWrapper);
     }
 
     @Override
     public Boolean deleteBatch(Integer[] ids) {
-        return newsMapper.deleteBatch(ids)>0;
+        return this.removeByIds(Arrays.asList(ids));
     }
 
     @Override
     public News queryNewsById(Long newsId) {
-        return newsMapper.selectByPrimaryKey(newsId);
+        return this.getById(newsId);
+        // return newsMapper.selectByPrimaryKey(newsId);
     }
 
     @Override
     public String updateNews(News news) {
-        News newsForUpdate = newsMapper.selectByPrimaryKey(news.getNewsId());
+        News newsForUpdate = this.getById(news.getNewsId());
         if (newsForUpdate == null) {
             return "数据不存在";
         }
@@ -55,9 +81,11 @@ public class NewsServiceImpl implements NewsService {
         news.setNewsStatus(news.getNewsStatus());
         news.setNewsTitle(news.getNewsTitle());
         news.setUpdateTime(new Date());
-        if (newsMapper.updateByPrimaryKeySelective(news) > 0) {
-            return "success";
-        }
-        return "修改失败";
+        return this.updateById(news) ? "success" : "修改失败";
+        // if (newsMapper.updateByPrimaryKeySelective(news) > 0) {
+        //     return "success";
+        // }
+        // return "修改失败";
     }
+
 }

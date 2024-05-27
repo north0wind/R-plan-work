@@ -9,21 +9,21 @@ import java.util.Map;
 
 @Component
 public interface NewsCommentMapper extends BaseMapper<NewsComment> {
-    int insert(NewsComment record);
-
-    int insertSelective(NewsComment record);
-
-    NewsComment selectByPrimaryKey(Long commentId);
-
-    int updateByPrimaryKeySelective(NewsComment record);
-
-    int updateByPrimaryKey(NewsComment record);
-
-    List<NewsComment> findNewsCommentList(Map map);
-
-    int getTotalNewsComments(Map map);
-
-    int checkDone(Integer[] ids);
-
-    int deleteBatch(Integer[] ids);
+    // int insert(NewsComment record);
+    //
+    // int insertSelective(NewsComment record);
+    //
+    // NewsComment selectByPrimaryKey(Long commentId);
+    //
+    // int updateByPrimaryKeySelective(NewsComment record);
+    //
+    // int updateByPrimaryKey(NewsComment record);
+    //
+    // List<NewsComment> findNewsCommentList(Map map);
+    //
+    // int getTotalNewsComments(Map map);
+    //
+    // int checkDone(Integer[] ids);
+    //
+    // int deleteBatch(Integer[] ids);
 }

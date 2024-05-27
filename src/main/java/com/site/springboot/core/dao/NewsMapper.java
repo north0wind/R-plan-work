@@ -9,21 +9,21 @@ import java.util.List;
 
 @Component
 public interface NewsMapper extends BaseMapper<News> {
-    int deleteByPrimaryKey(Long newsId);
-
-    int insert(News record);
-
-    int insertSelective(News record);
-
-    News selectByPrimaryKey(Long newsId);
-
-    int updateByPrimaryKeySelective(News record);
-
-    int updateByPrimaryKey(News record);
-
-    List<News> findNewsList(PageQueryUtil pageUtil);
-
-    int getTotalNews(PageQueryUtil pageUtil);
-
-    int deleteBatch(Integer[] ids);
+    // int deleteByPrimaryKey(Long newsId);
+    //
+    // int insert(News record);
+    //
+    // int insertSelective(News record);
+    //
+    // News selectByPrimaryKey(Long newsId);
+    //
+    // int updateByPrimaryKeySelective(News record);
+    //
+    // int updateByPrimaryKey(News record);
+    //
+    // // List<News> findNewsList(PageQueryUtil pageUtil);
+    //
+    // // int getTotalNews(PageQueryUtil pageUtil);
+    //
+    // int deleteBatch(Integer[] ids);
 }
