@@ -1,0 +1,28 @@
+server:
+  port: 28083
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_news_system?serverTimezone=GMT%2B8
+    username: root
+    password: 616296
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      # logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      # logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  mapper-locations: classpath:mapper/*Mapper.xml
+
+logging:
+  level:
+    com.esp.security: debug
+    org:
+      springframework: debug
+  pattern:
+    console: "%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %green([%thread]) %blue([%-5level]) %cyan(%logger{36}:%line) %msg%n"
