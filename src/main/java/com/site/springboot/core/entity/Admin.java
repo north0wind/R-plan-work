@@ -1,5 +1,8 @@
 package com.site.springboot.core.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
+@TableName("sys_admin")
 public class Admin {
     private Long adminId;
 

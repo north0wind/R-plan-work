@@ -1,9 +1,11 @@
 package com.site.springboot.core.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
+@TableName("sys_news_category")
 public class NewsCategory {
     private Long categoryId;
 

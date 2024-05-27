@@ -1,5 +1,6 @@
 package com.site.springboot.core.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.site.springboot.core.entity.NewsComment;
 import org.springframework.stereotype.Component;
 
@@ -7,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public interface NewsCommentMapper {
+public interface NewsCommentMapper extends BaseMapper<NewsComment> {
     int insert(NewsComment record);
 
     int insertSelective(NewsComment record);
