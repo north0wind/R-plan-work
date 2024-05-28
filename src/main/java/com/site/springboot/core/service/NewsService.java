@@ -32,4 +32,19 @@ public interface NewsService {
     String updateNews(News news);
 
     List<NewsExcel> getData();
+
+    /**
+     * 首页最新新闻
+     *
+     * @return
+     */
+    PageResult getLastedNews(PageQueryUtil pageUtil);
+
+    /**
+     * 根据关键字模糊查询
+     *
+     * @param keyword
+     * @return
+     */
+    List<News> findNewsByKeyword(String keyword);
 }
