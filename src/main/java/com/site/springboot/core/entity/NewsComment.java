@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
-@TableName("sys_news_comment")
+@TableName("tb_news_comment")
 public class NewsComment {
 
     /**

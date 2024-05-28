@@ -1,11 +1,14 @@
 package com.site.springboot.core.controller.admin;
 
 import cn.hutool.captcha.ShearCaptcha;
+import com.site.springboot.core.config.PasswordEncoder;
 import com.site.springboot.core.entity.Admin;
 import com.site.springboot.core.service.*;
+import com.site.springboot.param.UserParam;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,9 @@ public class AdminController {
 
     @Resource
     private AdminService adminService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping({"/login"})
     public String login() {
@@ -58,6 +64,16 @@ public class AdminController {
             session.setAttribute("errorMsg", "登陆失败");
             return "admin/login";
         }
+    }
+
+    //注册
+    @PostMapping("/register")
+    public String register(@RequestBody UserParam param){
+        Admin user = new Admin();
+        user.setLoginName(param.getUsername());
+        user.setLoginPassword(passwordEncoder.encode(param.getPassword()));
+        adminService.save(user);
+        return "redirect:/admin/login";
     }
 
     @GetMapping("/profile")

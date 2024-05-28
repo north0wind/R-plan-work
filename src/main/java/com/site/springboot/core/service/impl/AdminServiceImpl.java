@@ -6,13 +6,16 @@ import com.site.springboot.core.dao.AdminMapper;
 import com.site.springboot.core.entity.Admin;
 import com.site.springboot.core.service.AdminService;
 import com.site.springboot.core.util.MD5Util;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
-
 import jakarta.annotation.Resource;
+
 @Service
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements AdminService {
     @Resource
     private AdminMapper adminMapper;
+
 
     @Override
     public Admin login(String userName, String password) {
@@ -27,13 +30,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Override
     public Admin getUserDetailById(Long loginUserId) {
-        return adminMapper.selectById(loginUserId);
+        return this.getById(loginUserId);
         // return adminMapper.selectByPrimaryKey(loginUserId);
     }
 
     @Override
     public Boolean updatePassword(Long loginUserId, String originalPassword, String newPassword) {
-        Admin adminUser = adminMapper.selectById(loginUserId);
+        Admin adminUser = this.getById(loginUserId);
         //当前用户非空才可以进行更改
         if (adminUser != null) {
             String originalPasswordMd5 = MD5Util.MD5Encode(originalPassword, "UTF-8");
@@ -52,7 +55,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Override
     public Boolean updateName(Long loginUserId, String loginUserName, String nickName) {
-        Admin adminUser = adminMapper.selectById(loginUserId);
+        Admin adminUser = this.getById(loginUserId);
         //当前用户非空才可以进行更改
         if (adminUser != null) {
             //设置新密码并修改
@@ -66,5 +69,18 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             // }
         }
         return false;
+    }
+
+    @Override
+    public Admin getAdminByUserName(String userName) {
+        // QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Admin> queryWrapper = new LambdaQueryWrapper<>();
+        Admin admin = this.getOne(queryWrapper.eq(Admin::getLoginName, userName));
+        return admin;
+    }
+
+    @Override
+    public boolean save(Admin entity) {
+        return this.save(entity);
     }
 }

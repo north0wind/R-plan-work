@@ -6,6 +6,9 @@ public interface AdminService {
 
     Admin login(String userName, String password);
 
+
+    boolean save(Admin admin);
+
     /**
      * 获取用户信息
      *
@@ -33,5 +36,13 @@ public interface AdminService {
      * @return
      */
     Boolean updateName(Long loginUserId, String loginUserName, String nickName);
+
+    /**
+     * 根据用户名查询管理员
+     *
+     * @param userName
+     * @return
+     */
+    Admin getAdminByUserName(String userName);
 
 }

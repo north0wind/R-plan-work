@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
-@TableName("sys_news_category")
+@TableName("tb_news_category")
 public class NewsCategory {
     /**
      * 主键
