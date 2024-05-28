@@ -111,4 +111,30 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         return list;
     }
 
+    @Override
+    public PageResult getLastedNews(PageQueryUtil pageUtil) {
+        List<News> newsList = this.findLastedNewsList();
+        int total = this.getTotalNews(pageUtil);
+        PageResult pageResult = new PageResult(newsList, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
+    }
+
+    @Override
+    public List<News> findNewsByKeyword(String keyword) {
+        QueryWrapper<News> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", 0)
+                .and(wrapper -> wrapper.like("news_title", keyword)
+                        .or().like("news_content", keyword));
+        return list(queryWrapper);
+    }
+
+    public List<News> findLastedNewsList() {
+        QueryWrapper<News> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", 0)
+                .eq("news_status", 1)
+                .orderByDesc("create_time")
+                .last("limit 5");
+        return list(queryWrapper);
+    }
+
 }
