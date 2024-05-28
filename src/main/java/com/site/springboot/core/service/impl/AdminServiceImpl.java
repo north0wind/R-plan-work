@@ -6,8 +6,6 @@ import com.site.springboot.core.dao.AdminMapper;
 import com.site.springboot.core.entity.Admin;
 import com.site.springboot.core.service.AdminService;
 import com.site.springboot.core.util.MD5Util;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 

@@ -4,7 +4,7 @@ import cn.hutool.captcha.ShearCaptcha;
 import com.site.springboot.core.config.PasswordEncoder;
 import com.site.springboot.core.entity.Admin;
 import com.site.springboot.core.service.*;
-import com.site.springboot.param.UserParam;
+import com.site.springboot.core.param.UserParam;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

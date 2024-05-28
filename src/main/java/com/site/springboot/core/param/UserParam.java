@@ -1,4 +1,4 @@
-package com.site.springboot.param;
+package com.site.springboot.core.param;
 
 import lombok.Data;
 
