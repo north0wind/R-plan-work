@@ -11,6 +11,7 @@ import com.site.springboot.core.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +89,7 @@ public class CategoryServiceImpl extends ServiceImpl<NewsCategoryMapper, NewsCat
             return false;
         }
         //删除分类数据
-        return this.deleteBatchByIds(ids);
+        return this.removeBatchByIds(Arrays.asList(ids));
     }
 
 }
