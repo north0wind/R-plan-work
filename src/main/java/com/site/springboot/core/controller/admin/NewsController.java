@@ -1,18 +1,28 @@
 package com.site.springboot.core.controller.admin;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.util.ListUtils;
 import com.site.springboot.core.entity.News;
+import com.site.springboot.core.poi.NewsExcel;
 import com.site.springboot.core.service.CategoryService;
 import com.site.springboot.core.service.NewsService;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.Result;
 import com.site.springboot.core.util.ResultGenerator;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 
 
@@ -146,5 +156,17 @@ public class NewsController {
             return ResultGenerator.genFailResult("删除失败");
         }
     }
+
+    @GetMapping("/news/export")
+    public void download(HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        String fileName = URLEncoder.encode("新闻", "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        EasyExcel.write(response.getOutputStream(), NewsExcel.class).sheet("模板").doWrite(newsService.getData());
+    }
+
+
+
 
 }

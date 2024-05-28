@@ -1,10 +1,13 @@
 package com.site.springboot.core.service.impl;
 
+import com.alibaba.excel.util.ListUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.springboot.core.dao.NewsMapper;
 import com.site.springboot.core.entity.News;
+import com.site.springboot.core.poi.NewsExcel;
+import com.site.springboot.core.service.CategoryService;
 import com.site.springboot.core.service.NewsService;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.PageResult;
@@ -21,6 +24,8 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
 
     @Autowired
     private NewsMapper newsMapper;
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public String saveNews(News news) {
@@ -80,6 +85,30 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         //     return "success";
         // }
         // return "修改失败";
+    }
+
+    @Override
+    public List<NewsExcel> getData() {
+        List<News> newsList = this.list();
+
+        List<NewsExcel> list = ListUtils.newArrayList();
+        for (int i = 0; i < newsList.size(); i++) {
+            News news = newsList.get(i);
+            NewsExcel data = new NewsExcel();
+            data.setNewsTitle(news.getNewsTitle());
+            data.setNewsCategory(categoryService.getCategoryById(news.getNewsCategoryId()).getCategoryName());
+            data.setNewsCoverImage(news.getNewsCoverImage());
+            data.setNewsContent(news.getNewsContent());
+            if (news.getNewsStatus() == 1){
+                data.setNewsStatus("已发布");
+            }else {
+                data.setNewsStatus("草稿");
+            }
+            data.setNewsViews(news.getNewsViews());
+            data.setCreateTime(news.getCreateTime());
+            list.add(data);
+        }
+        return list;
     }
 
 }

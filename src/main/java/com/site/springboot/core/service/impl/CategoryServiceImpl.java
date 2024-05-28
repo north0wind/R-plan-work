@@ -18,8 +18,8 @@ import java.util.Map;
 @Service
 public class CategoryServiceImpl extends ServiceImpl<NewsCategoryMapper, NewsCategory> implements CategoryService {
 
-    @Autowired
-    private NewsCategoryMapper newsCategoryMapper;
+    // @Autowired
+    // private NewsCategoryMapper newsCategoryMapper;
 
     @Override
     public List<NewsCategory> getAllCategories() {
@@ -90,6 +90,11 @@ public class CategoryServiceImpl extends ServiceImpl<NewsCategoryMapper, NewsCat
         }
         //删除分类数据
         return this.removeBatchByIds(Arrays.asList(ids));
+    }
+
+    @Override
+    public NewsCategory getCategoryById(Long categoryId) {
+        return this.getById(categoryId);
     }
 
 }

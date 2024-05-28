@@ -1,9 +1,11 @@
 package com.site.springboot.core.service;
 
 import com.site.springboot.core.entity.News;
+import com.site.springboot.core.poi.NewsExcel;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.PageResult;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface NewsService {
@@ -29,4 +31,5 @@ public interface NewsService {
      */
     String updateNews(News news);
 
+    List<NewsExcel> getData();
 }

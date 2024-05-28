@@ -45,4 +45,5 @@ public interface CategoryService {
      */
     Boolean deleteBatchByIds(Integer[] ids);
 
+    NewsCategory getCategoryById(Long categoryId);
 }
