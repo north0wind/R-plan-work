@@ -24,13 +24,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
 
     @Override
     public String saveNews(News news) {
-        boolean b = this.save(news);
         return this.save(news) ? "success" : "保存失败";
-        // if (newsMapper.insertSelective(news) > 0) {
-        //     return "success";
-        // }
-        // return "保存失败";
-
     }
 
     @Override
