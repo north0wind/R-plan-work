@@ -27,6 +27,7 @@ import java.util.Map;
 
 
 @Controller
+// @RequestMapping("")
 @RequestMapping("/admin")
 public class NewsController {
 
@@ -166,7 +167,25 @@ public class NewsController {
         EasyExcel.write(response.getOutputStream(), NewsExcel.class).sheet("模板").doWrite(newsService.getData());
     }
 
+    @GetMapping("/lasted-news")
+    @ResponseBody
+    public Result listLastedNews(@RequestParam Map<String, Object> params) {
+        if (ObjectUtils.isEmpty(params.get("page")) || ObjectUtils.isEmpty(params.get("limit"))) {
+            return ResultGenerator.genFailResult("参数异常！");
+        }
+        PageQueryUtil pageUtil = new PageQueryUtil(params);
+        return ResultGenerator.genSuccessResult(newsService.getLastedNews(pageUtil));
+    }
 
+    //输入关键字进行搜索
+    @PostMapping("/search")
+    @ResponseBody
+    public Result search(@RequestParam("keyword") String keyword) {
+        if (!StringUtils.hasText(keyword)) {
+            return ResultGenerator.genFailResult("参数异常！");
+        }
+        return ResultGenerator.genSuccessResult(newsService.findNewsByKeyword(keyword));
+    }
 
 
 }
