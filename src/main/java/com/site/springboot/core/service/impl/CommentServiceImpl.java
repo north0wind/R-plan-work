@@ -79,7 +79,8 @@ public class CommentServiceImpl extends ServiceImpl<NewsCommentMapper, NewsComme
     @Override
     public List<NewsComment> getCommentsByNewsId(Long newsId) {
         QueryWrapper<NewsComment> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("news_id", newsId);
+        queryWrapper.eq("news_id", newsId)
+                .eq("is_deleted",0);
         List<NewsComment> result = this.list(queryWrapper);
         return result;
     }

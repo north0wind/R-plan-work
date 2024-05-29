@@ -2,7 +2,6 @@ package com.site.springboot.core.service.impl;
 
 import com.alibaba.excel.util.ListUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.springboot.core.dao.NewsMapper;
 import com.site.springboot.core.entity.News;
@@ -13,7 +12,7 @@ import com.site.springboot.core.service.CommentService;
 import com.site.springboot.core.service.NewsService;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.PageResult;
-import com.site.springboot.core.vo.NewsVO;
+import com.site.springboot.core.vo.NewsDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -127,7 +126,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
 
     @Override
     public PageResult getLastedNews(PageQueryUtil pageUtil) {
-        List<NewsVO> newsList = this.findLastedNewsList();
+        List<NewsDetail> newsList = this.findLastedNewsList();
         int total = this.getTotalNews(pageUtil);
         PageResult pageResult = new PageResult(newsList, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
@@ -143,25 +142,26 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
     }
 
     @Override
-    public NewsVO getNewsAndComments(Long newsId) {
+    public NewsDetail getNewsAndComments(Long newsId) {
         News news = this.getById(newsId);
         List<NewsComment> newsComments = commentService.getCommentsByNewsId(newsId);
-        if (news != null) {
-            NewsVO newsVO = new NewsVO();
-            newsVO.setNewsId(news.getNewsId());
-            newsVO.setNewsTitle(news.getNewsTitle());
-            newsVO.setNewsCoverImage(news.getNewsCoverImage());
-            newsVO.setNewsContent(news.getNewsContent());
-            newsVO.setNewsStatus(news.getNewsStatus());
-            newsVO.setNewsViews(news.getNewsViews());
-            newsVO.setCreateTime(news.getCreateTime());
-            newsVO.setComments(newsComments);
-        }
-        return null;
+
+        NewsDetail newsDetail = new NewsDetail();
+        newsDetail.setNewsId(news.getNewsId());
+        newsDetail.setNewsTitle(news.getNewsTitle());
+        newsDetail.setNewsCoverImage(news.getNewsCoverImage());
+        newsDetail.setNewsContent(news.getNewsContent());
+        newsDetail.setNewsStatus(news.getNewsStatus());
+        newsDetail.setNewsCategoryId(news.getNewsCategoryId());
+        newsDetail.setNewsViews(news.getNewsViews());
+        newsDetail.setCreateTime(news.getCreateTime());
+        newsDetail.setComments(newsComments);
+
+        return newsDetail;
     }
 
-    public List<NewsVO> findLastedNewsList() {
-        List<NewsVO> newsVOList = new ArrayList<>();
+    public List<NewsDetail> findLastedNewsList() {
+        List<NewsDetail> newsDetailList = new ArrayList<>();
         QueryWrapper<News> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", 0)
                 .eq("news_status", 1)
@@ -169,18 +169,18 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
                 .last("limit 10");
         List<News> news = list(queryWrapper);
         for (News news1 : news){
-            NewsVO newsVO = new NewsVO();
+            NewsDetail newsDetail = new NewsDetail();
             List<NewsComment> comments = commentService.getCommentsByNewsId(news1.getNewsId());
-            newsVO.setNewsId(news1.getNewsId());
-            newsVO.setNewsTitle(news1.getNewsTitle());
-            newsVO.setNewsCoverImage(news1.getNewsCoverImage());
-            newsVO.setNewsStatus(news1.getNewsStatus());
-            newsVO.setNewsViews(news1.getNewsViews());
-            newsVO.setCreateTime(news1.getCreateTime());
-            newsVO.setComments(comments);
-            newsVOList.add(newsVO);
+            newsDetail.setNewsId(news1.getNewsId());
+            newsDetail.setNewsTitle(news1.getNewsTitle());
+            newsDetail.setNewsCoverImage(news1.getNewsCoverImage());
+            newsDetail.setNewsStatus(news1.getNewsStatus());
+            newsDetail.setNewsViews(news1.getNewsViews());
+            newsDetail.setCreateTime(news1.getCreateTime());
+            newsDetail.setComments(comments);
+            newsDetailList.add(newsDetail);
         }
-        return newsVOList;
+        return newsDetailList;
     }
 
 }

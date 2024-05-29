@@ -4,9 +4,8 @@ import com.site.springboot.core.entity.News;
 import com.site.springboot.core.poi.NewsExcel;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.PageResult;
-import com.site.springboot.core.vo.NewsVO;
+import com.site.springboot.core.vo.NewsDetail;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface NewsService {
@@ -55,5 +54,5 @@ public interface NewsService {
      * @param newsId
      * @return
      */
-    NewsVO getNewsAndComments(Long newsId);
+    NewsDetail getNewsAndComments(Long newsId);
 }

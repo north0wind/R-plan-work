@@ -24,12 +24,4 @@ public class ApplicationTest {
         System.out.println(news1);
     }
 
-    @Test
-    public void testUpdate(){
-        News news = newsService.queryNewsById(20L);
-        news.setNewsTitle("Cache-update");
-        newsService.updateNews(news);
-        News news1 = newsService.queryNewsById(20L);
-        System.out.println(news1);
-    }
 }

@@ -1,7 +1,6 @@
 package com.site.springboot.core.controller.admin;
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.util.ListUtils;
 import com.site.springboot.core.entity.News;
 import com.site.springboot.core.poi.NewsExcel;
 import com.site.springboot.core.service.CategoryService;
@@ -9,10 +8,9 @@ import com.site.springboot.core.service.NewsService;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.Result;
 import com.site.springboot.core.util.ResultGenerator;
+import com.site.springboot.core.vo.NewsDetail;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -22,7 +20,6 @@ import jakarta.annotation.Resource;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Map;
 
 
@@ -190,12 +187,12 @@ public class NewsController {
     @GetMapping("/news/detail/{newsId}")
     public String detailPage(HttpServletRequest request, @PathVariable("newsId") Long newsId) {
         request.setAttribute("path", "detail");
-        News news = newsService.getNewsAndComments(newsId);
-        if (news == null) {
+        NewsDetail newsDetail = newsService.getNewsAndComments(newsId);
+        if (newsDetail == null) {
             return "error/error_400";
         }
-        request.setAttribute("news", news);
-        return "admin/detail";
+        request.setAttribute("newsDetail", newsDetail);
+        return "index/detail";
     }
 
 }

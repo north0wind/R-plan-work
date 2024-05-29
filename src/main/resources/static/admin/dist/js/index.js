@@ -6,9 +6,9 @@ $(function () {
             {label: 'id', name: 'newsId', index: 'newsId', width: 50, key: true, hidden: true},
             {label: '标题', name: 'newsTitle', index: 'newsTitle', width: 60},
 //            {label: '预览图', name: 'newsCoverImage', index: 'newsCoverImage', width: 70, formatter: coverImageFormatter},
-            {label: '浏览量', name: 'newsViews', index: 'newsViews', width: 20},
-            {label: '添加时间', name: 'createTime', index: 'createTime', width: 80}
-//            {label: '详情', name: 'detail', index: 'detail', width: 60}
+            {label: '浏览量', name: 'newsViews', index: 'newsViews', width: 20 ,align: 'center',},
+            {label: '添加时间', name: 'createTime', index: 'createTime', width: 80},
+            {label: '操作', name: 'actions', index: 'actions', width: 60, formatter: actionFormatter, align: 'left', sortable: false, search: false}
         ],
         height: 150,
         rowNum: 10,
@@ -42,7 +42,7 @@ $(function () {
          colModel: [
              {label: 'id', name: 'commentId', index: 'commentId', width: 50, key: true, hidden: true},
              {label: '评论内容', name: 'commentBody', index: 'commentBody', width: 60},
-              {label: '评论人名称', name: 'commentator', index: 'commentator', width: 20},
+              {label: '评论人名称', name: 'commentator', index: 'commentator', width: 20,align: 'center',},
              {label: '评论时间', name: 'createTime', index: 'createTime', width: 80},
 //             {label: '状态', name: 'commentStatus', index: 'commentStatus', width: 60, formatter: statusFormatter}
          ],
@@ -100,7 +100,16 @@ function reload() {
 //function addNews() {
 //    window.location.href = "/admin/news/edit";
 //}
+function actionFormatter(cellvalue, options, rowObject) {
+     return "<a href='javascript:void(0);' onclick='showDetail(" + rowObject.newsId + ")'>详情</a>";
+}
 
+function showDetail(newsId) {
+     // 构建新闻详情页面的URL
+     var detailUrl = "/admin/news/detail/" + newsId;
+     // 通过 JavaScript 进行页面重定向
+     window.location.href = detailUrl;
+ }
 function editNews() {
     var id = getSelectedRow();
     if (id == null) {

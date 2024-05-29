@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2024/5/29
  */
 @Data
-public class NewsVO extends News {
+public class NewsDetail extends News {
     /**
      * 评论
      */
