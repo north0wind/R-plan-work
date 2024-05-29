@@ -145,7 +145,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         queryWrapper.eq("is_deleted", 0)
                 .eq("news_status", 1)
                 .orderByDesc("create_time")
-                .last("limit 5");
+                .last("limit 10");
         return list(queryWrapper);
     }
 
