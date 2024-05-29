@@ -187,5 +187,15 @@ public class NewsController {
         return ResultGenerator.genSuccessResult(newsService.findNewsByKeyword(keyword));
     }
 
+    @GetMapping("/news/detail/{newsId}")
+    public String detailPage(HttpServletRequest request, @PathVariable("newsId") Long newsId) {
+        request.setAttribute("path", "detail");
+        News news = newsService.getNewsAndComments(newsId);
+        if (news == null) {
+            return "error/error_400";
+        }
+        request.setAttribute("news", news);
+        return "admin/detail";
+    }
 
 }

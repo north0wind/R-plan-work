@@ -4,6 +4,7 @@ import com.site.springboot.core.entity.News;
 import com.site.springboot.core.poi.NewsExcel;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.PageResult;
+import com.site.springboot.core.vo.NewsVO;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,4 +48,12 @@ public interface NewsService {
      * @return
      */
     List<News> findNewsByKeyword(String keyword);
+
+    /**
+     * 根据id获取详情
+     *
+     * @param newsId
+     * @return
+     */
+    NewsVO getNewsAndComments(Long newsId);
 }

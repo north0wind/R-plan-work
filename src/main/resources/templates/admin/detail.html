@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>新闻详情</title>
+<!--    <link rel="stylesheet" th:href="@{/admin/plugins/bootstrap/css/bootstrap.min.css}">-->
+<!--    <link rel="stylesheet" th:href="@{/admin/dist/css/adminlte.min.css}">-->
+<!--    <script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>-->
+<!--    <script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>-->
+<!--    <script th:src="@{/admin/dist/js/adminlte.min.js}"></script>-->
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 mt-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3 id="newsTitle">新闻标题</h3>
+                </div>
+                <div class="card-body">
+                    <img id="newsCoverImage" src="" alt="封面图" class="img-fluid mb-3"/>
+                    <p id="newsContent">新闻内容加载中...</p>
+                </div>
+                <div class="card-footer">
+                    <h5>评论</h5>
+                    <div id="comments"></div>
+                    <div class="form-group">
+                        <label for="comment">添加评论:</label>
+                        <textarea class="form-control" id="comment" rows="3"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="addComment()">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const newsId = urlParams.get('newsId');
+
+        // Fetch news details
+        $.ajax({
+            url: '/admin/news/' + newsId,
+            type: 'GET',
+            success: function(data) {
+                $('#newsTitle').text(data.newsTitle);
+                $('#newsCoverImage').attr('src', data.newsCoverImage);
+                $('#newsContent').text(data.newsContent);
+            },
+            error: function() {
+                alert('新闻详情加载失败');
+            }
+        });
+
+        // Fetch comments
+        loadComments(newsId);
+    });
+
+    function loadComments(newsId) {
+        $.ajax({
+            url: '/admin/news/' + newsId + '/comments',
+            type: 'GET',
+            success: function(data) {
+                const commentsDiv = $('#comments');
+                commentsDiv.empty();
+                data.forEach(function(comment) {
+                    commentsDiv.append('<div class="comment"><p>' + comment.content + '</p></div>');
+                });
+            },
+            error: function() {
+                alert('评论加载失败');
+            }
+        });
+    }
+
+    function addComment() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const newsId = urlParams.get('newsId');
+        const comment = $('#comment').val();
+
+        if (!comment) {
+            alert('评论不能为空');
+            return;
+        }
+
+        $.ajax({
+            url: '/admin/news/' + newsId + '/comments',
+            type: 'POST',
+            data: JSON.stringify({content: comment}),
+            contentType: 'application/json',
+            success: function() {
+                $('#comment').val('');
+                loadComments(newsId);
+            },
+            error: function() {
+                alert('评论提交失败');
+            }
+        });
+    }
+</script>
+</body>
+</html>

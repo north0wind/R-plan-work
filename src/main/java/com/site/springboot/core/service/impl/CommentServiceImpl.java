@@ -75,4 +75,34 @@ public class CommentServiceImpl extends ServiceImpl<NewsCommentMapper, NewsComme
         return this.removeByIds(Arrays.asList(ids));
         // return newsCommentMapper.deleteBatch(ids) > 0;
     }
+
+    @Override
+    public List<NewsComment> getCommentsByNewsId(Long newsId) {
+        QueryWrapper<NewsComment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("news_id", newsId);
+        List<NewsComment> result = this.list(queryWrapper);
+        return result;
+    }
+
+    @Override
+    public PageResult getCommentsLasted(PageQueryUtil pageUtil) {
+        List<NewsComment> comments = this.findNewsCommentLasted(pageUtil);
+        int total = this.getTotalNewsComments(pageUtil);
+        PageResult pageResult = new PageResult(comments, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
+    }
+    public List<NewsComment> findNewsCommentLasted(Map<String, Object> params) {
+        QueryWrapper<NewsComment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", 0)
+                .eq("comment_status", 1)
+                .orderByDesc("create_time")
+                .last("limit 10");
+
+        // 如果存在start和limit参数，模拟分页查询，然后取所有页的数据
+        int start = (int) params.getOrDefault("start", 0);
+        int limit = (int) params.getOrDefault("limit", Integer.MAX_VALUE);
+        queryWrapper.last("limit " + start + ", " + limit);
+
+        return list(queryWrapper);
+    }
 }

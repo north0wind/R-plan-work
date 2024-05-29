@@ -27,19 +27,10 @@
             <div class="container-fluid">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">最新新闻管理</h3>
+                        <h3 class="card-title">新闻列表</h3>
                     </div> <!-- /.card-body -->
                     <div class="card-body">
                         <div class="grid-btn">
-<!--                            <button class="btn btn-success" onclick="addNews()"><i-->
-<!--                                    class="fa fa-plus"></i>&nbsp;新增-->
-<!--                            </button>-->
-                            <button class="btn btn-info" onclick="editNews()"><i
-                                    class="fa fa-edit"></i>&nbsp;修改
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteNews()"><i
-                                    class="fa fa-trash-o"></i>&nbsp;删除
-                            </button>&nbsp;&nbsp;
                             <input type="text" id="searchInput" placeholder="输入关键词进行搜索">
                             <button class="btn btn-info" onclick="findNews(document.getElementById('searchInput').value)">
                                 <i class="fa fa-search"></i>&nbsp;搜索
@@ -49,8 +40,15 @@
                         </div>
                         <!-- JqGrid必要DOM,用于创建表格展示列表数据 -->
                         <table id="jqGrid" class="table table-bordered"></table>
-<!--                        &lt;!&ndash; JqGrid必要DOM,分页信息区域 &ndash;&gt;-->
-<!--                        <div id="jqGridPager"></div>-->
+                    </div><!-- /.card-body -->
+                    <div class="card-header">
+                        <h3 class="card-title">评论列表</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <div class="grid-btn">
+                        </div>
+                        <!-- JqGrid必要DOM,用于创建表格展示列表数据 -->
+                        <table id="jqGrid1" class="table table-bordered"></table>
                     </div><!-- /.card-body -->
                 </div>
             </div><!-- /.container-fluid -->

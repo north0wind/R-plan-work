@@ -4,6 +4,8 @@ import com.site.springboot.core.entity.NewsComment;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.PageResult;
 
+import java.util.List;
+
 public interface CommentService {
     /**
      * 添加评论
@@ -36,4 +38,14 @@ public interface CommentService {
      * @return
      */
     Boolean deleteBatch(Integer[] ids);
+
+    /**
+     * 根据newsId查询评论
+     *
+     * @param newsId
+     * @return
+     */
+    List<NewsComment> getCommentsByNewsId(Long newsId);
+
+    PageResult getCommentsLasted(PageQueryUtil pageUtil);
 }

@@ -18,10 +18,18 @@ public class ApplicationTest {
 
     @Test
     public void testQueryNewsById(){
-        News news = newsService.queryNewsById(20L);
+        News news = newsService.queryNewsById(21L);
         System.out.println(news);
-        News news1 = newsService.queryNewsById(3L);
+        News news1 = newsService.queryNewsById(4L);
         System.out.println(news1);
+    }
 
+    @Test
+    public void testUpdate(){
+        News news = newsService.queryNewsById(20L);
+        news.setNewsTitle("Cache-update");
+        newsService.updateNews(news);
+        News news1 = newsService.queryNewsById(20L);
+        System.out.println(news1);
     }
 }

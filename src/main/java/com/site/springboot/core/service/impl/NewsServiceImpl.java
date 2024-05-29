@@ -6,21 +6,21 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.springboot.core.dao.NewsMapper;
 import com.site.springboot.core.entity.News;
+import com.site.springboot.core.entity.NewsComment;
 import com.site.springboot.core.poi.NewsExcel;
 import com.site.springboot.core.service.CategoryService;
+import com.site.springboot.core.service.CommentService;
 import com.site.springboot.core.service.NewsService;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.PageResult;
+import com.site.springboot.core.vo.NewsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Service
@@ -32,6 +32,8 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
     private NewsMapper newsMapper;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CommentService commentService;
 
     @Override
     @CachePut(value = "news",key = "'news:' + #news.newsId")
@@ -125,7 +127,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
 
     @Override
     public PageResult getLastedNews(PageQueryUtil pageUtil) {
-        List<News> newsList = this.findLastedNewsList();
+        List<NewsVO> newsList = this.findLastedNewsList();
         int total = this.getTotalNews(pageUtil);
         PageResult pageResult = new PageResult(newsList, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
@@ -140,13 +142,45 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         return list(queryWrapper);
     }
 
-    public List<News> findLastedNewsList() {
+    @Override
+    public NewsVO getNewsAndComments(Long newsId) {
+        News news = this.getById(newsId);
+        List<NewsComment> newsComments = commentService.getCommentsByNewsId(newsId);
+        if (news != null) {
+            NewsVO newsVO = new NewsVO();
+            newsVO.setNewsId(news.getNewsId());
+            newsVO.setNewsTitle(news.getNewsTitle());
+            newsVO.setNewsCoverImage(news.getNewsCoverImage());
+            newsVO.setNewsContent(news.getNewsContent());
+            newsVO.setNewsStatus(news.getNewsStatus());
+            newsVO.setNewsViews(news.getNewsViews());
+            newsVO.setCreateTime(news.getCreateTime());
+            newsVO.setComments(newsComments);
+        }
+        return null;
+    }
+
+    public List<NewsVO> findLastedNewsList() {
+        List<NewsVO> newsVOList = new ArrayList<>();
         QueryWrapper<News> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", 0)
                 .eq("news_status", 1)
                 .orderByDesc("create_time")
                 .last("limit 10");
-        return list(queryWrapper);
+        List<News> news = list(queryWrapper);
+        for (News news1 : news){
+            NewsVO newsVO = new NewsVO();
+            List<NewsComment> comments = commentService.getCommentsByNewsId(news1.getNewsId());
+            newsVO.setNewsId(news1.getNewsId());
+            newsVO.setNewsTitle(news1.getNewsTitle());
+            newsVO.setNewsCoverImage(news1.getNewsCoverImage());
+            newsVO.setNewsStatus(news1.getNewsStatus());
+            newsVO.setNewsViews(news1.getNewsViews());
+            newsVO.setCreateTime(news1.getCreateTime());
+            newsVO.setComments(comments);
+            newsVOList.add(newsVO);
+        }
+        return newsVOList;
     }
 
 }

@@ -4,16 +4,13 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: 'id', name: 'newsId', index: 'newsId', width: 50, key: true, hidden: true},
-            {label: '标题', name: 'newsTitle', index: 'newsTitle', width: 100},
-            {label: '预览图', name: 'newsCoverImage', index: 'newsCoverImage', width: 70, formatter: coverImageFormatter},
-            {label: '浏览量', name: 'newsViews', index: 'newsViews', width: 60},
-//            {label: '状态', name: 'newsStatus', index: 'newsStatus', width: 60},
-//            {label: '状态', name: 'newsStatus', index: 'newsStatus', width: 60, formatter: statusFormatter},
+            {label: '标题', name: 'newsTitle', index: 'newsTitle', width: 60},
+//            {label: '预览图', name: 'newsCoverImage', index: 'newsCoverImage', width: 70, formatter: coverImageFormatter},
+            {label: '浏览量', name: 'newsViews', index: 'newsViews', width: 20},
             {label: '添加时间', name: 'createTime', index: 'createTime', width: 80}
 //            {label: '详情', name: 'detail', index: 'detail', width: 60}
-//            {label: '点赞', name: 'like', index: 'like', width: 60}
         ],
-        height: 400,
+        height: 150,
         rowNum: 10,
         rowList: [10, 20, 50],
         styleUI: 'Bootstrap',
@@ -21,8 +18,8 @@ $(function () {
         rownumbers: false,
         rownumWidth: 20,
         autowidth: true,
-        multiselect: true,
-        pager: "#jqGridPager",
+//        multiselect: true,
+//        pager: "#jqGridPager",
         jsonReader: {
             root: "data.list",
             page: "data.currPage",
@@ -39,24 +36,55 @@ $(function () {
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
         }
     });
+    $("#jqGrid1").jqGrid({
+         url: '/admin/comments/list-lasted',
+         datatype: "json",
+         colModel: [
+             {label: 'id', name: 'commentId', index: 'commentId', width: 50, key: true, hidden: true},
+             {label: '评论内容', name: 'commentBody', index: 'commentBody', width: 60},
+              {label: '评论人名称', name: 'commentator', index: 'commentator', width: 20},
+             {label: '评论时间', name: 'createTime', index: 'createTime', width: 80},
+//             {label: '状态', name: 'commentStatus', index: 'commentStatus', width: 60, formatter: statusFormatter}
+         ],
+         height: 150,
+         rowNum: 10,
+         rowList: [10, 20, 50],
+         styleUI: 'Bootstrap',
+         loadtext: '信息读取中...',
+         rownumbers: false,
+         rownumWidth: 20,
+         autowidth: true,
+//            multiselect: true,
+//            pager: "#jqGridPager",
+         jsonReader: {
+             root: "data.list",
+             page: "data.currPage",
+             total: "data.totalPage",
+             records: "data.totalCount"
+         },
+         prmNames: {
+             page: "page",
+             rows: "limit",
+             order: "order",
+         },
+         gridComplete: function () {
+             //隐藏grid底部滚动条
+             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+         }
+     });
+
+
+    $(window).resize(function () {
+        $("#jqGrid1").setGridWidth($(".card-body").width());
+    });
 
     $(window).resize(function () {
         $("#jqGrid").setGridWidth($(".card-body").width());
     });
 
-    function coverImageFormatter(cellvalue) {
-        return "<img src='" + cellvalue + "' height=\"120\" width=\"160\" alt='coverImage'/>";
-    }
-
-//    function statusFormatter(cellvalue) {
-//        if (cellvalue == 0) {
-//            return "<button type=\"button\" class=\"btn btn-block btn-secondary btn-sm\" style=\"width: 50%;\">草稿</button>";
-//        }
-//        else if (cellvalue == 1) {
-//            return "<button type=\"button\" class=\"btn btn-block btn-success btn-sm\" style=\"width: 50%;\">发布</button>";
-//        }
+//    function coverImageFormatter(cellvalue) {
+//        return "<img src='" + cellvalue + "' height=\"120\" width=\"160\" alt='coverImage'/>";
 //    }
-
 });
 
 /**

@@ -63,4 +63,15 @@ public class CommentController {
             return ResultGenerator.genFailResult("刪除失败");
         }
     }
+
+    @GetMapping("/comments/list-lasted")
+    @ResponseBody
+    public Result listLasted(@RequestParam Map<String, Object> params) {
+
+        if (ObjectUtils.isEmpty(params.get("page")) || ObjectUtils.isEmpty(params.get("limit"))) {
+            return ResultGenerator.genFailResult("参数异常！");
+        }
+        PageQueryUtil pageUtil = new PageQueryUtil(params);
+        return ResultGenerator.genSuccessResult(commentService.getCommentsLasted(pageUtil));
+    }
 }
