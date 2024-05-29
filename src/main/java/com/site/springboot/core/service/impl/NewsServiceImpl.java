@@ -12,15 +12,21 @@ import com.site.springboot.core.service.NewsService;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
 public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements NewsService {
+
+    private final Logger logger = Logger.getLogger(NewsServiceImpl.class.getName());
 
     @Autowired
     private NewsMapper newsMapper;
@@ -28,8 +34,10 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
     private CategoryService categoryService;
 
     @Override
-    public String saveNews(News news) {
-        return this.save(news) ? "success" : "保存失败";
+    @CachePut(value = "news",key = "'news:' + #news.newsId")
+    public News saveNews(News news) {
+        this.save(news);
+        return news;
     }
 
     @Override
@@ -57,17 +65,21 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         return (int)count(queryWrapper);
     }
 
+    @CacheEvict(value = "news", key = "'news:'+#ids", allEntries = false)
     @Override
     public Boolean deleteBatch(Integer[] ids) {
         return this.removeByIds(Arrays.asList(ids));
     }
 
+    @Cacheable(value = "news",key = "'news:' + #newsId")
     @Override
     public News queryNewsById(Long newsId) {
+        logger.info("queryNewsById--test: ".formatted(newsId));
         return this.getById(newsId);
         // return newsMapper.selectByPrimaryKey(newsId);
     }
 
+    @CachePut(value = "news",key = "'news:' + #news.newsId")
     @Override
     public String updateNews(News news) {
         News newsForUpdate = this.getById(news.getNewsId());
