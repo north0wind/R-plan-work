@@ -64,14 +64,22 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/comments/list-lasted")
+    /**
+     * 后台获取最新评论
+     *
+     * @param params
+     * @return
+     */
+    @GetMapping("/comments/list-latest")
     @ResponseBody
-    public Result listLasted(@RequestParam Map<String, Object> params) {
+    public Result listLatest(@RequestParam Map<String, Object> params,@RequestParam Long newsId) {
 
         if (ObjectUtils.isEmpty(params.get("page")) || ObjectUtils.isEmpty(params.get("limit"))) {
             return ResultGenerator.genFailResult("参数异常！");
         }
         PageQueryUtil pageUtil = new PageQueryUtil(params);
-        return ResultGenerator.genSuccessResult(commentService.getCommentsLasted(pageUtil));
+        return ResultGenerator.genSuccessResult(commentService.getCommentsLatest(pageUtil, newsId));
     }
+
+
 }

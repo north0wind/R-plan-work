@@ -124,8 +124,8 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
     }
 
     @Override
-    public PageResult getLastedNews(PageQueryUtil pageUtil) {
-        List<NewsDetail> newsList = this.findLastedNewsList();
+    public PageResult getLatestNews(PageQueryUtil pageUtil) {
+        List<NewsDetail> newsList = this.findLatestNewsList();
         int total = this.getTotalNews(pageUtil);
         PageResult pageResult = new PageResult(newsList, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
@@ -159,7 +159,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         return newsDetail;
     }
 
-    public List<NewsDetail> findLastedNewsList() {
+    public List<NewsDetail> findLatestNewsList() {
         List<NewsDetail> newsDetailList = new ArrayList<>();
         QueryWrapper<News> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", 0)

@@ -164,14 +164,14 @@ public class NewsController {
         EasyExcel.write(response.getOutputStream(), NewsExcel.class).sheet("模板").doWrite(newsService.getData());
     }
 
-    @GetMapping("/lasted-news")
+    @GetMapping("/latest-news")
     @ResponseBody
     public Result listLastedNews(@RequestParam Map<String, Object> params) {
         if (ObjectUtils.isEmpty(params.get("page")) || ObjectUtils.isEmpty(params.get("limit"))) {
             return ResultGenerator.genFailResult("参数异常！");
         }
         PageQueryUtil pageUtil = new PageQueryUtil(params);
-        return ResultGenerator.genSuccessResult(newsService.getLastedNews(pageUtil));
+        return ResultGenerator.genSuccessResult(newsService.getLatestNews(pageUtil));
     }
 
     //输入关键字进行搜索

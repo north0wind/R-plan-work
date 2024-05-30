@@ -38,7 +38,7 @@ public interface NewsService {
      *
      * @return
      */
-    PageResult getLastedNews(PageQueryUtil pageUtil);
+    PageResult getLatestNews(PageQueryUtil pageUtil);
 
     /**
      * 根据关键字模糊查询

@@ -47,5 +47,11 @@ public interface CommentService {
      */
     List<NewsComment> getCommentsByNewsId(Long newsId);
 
-    PageResult getCommentsLasted(PageQueryUtil pageUtil);
+    /**
+     * 根据newsId查询最新10条评论
+     *
+     * @param pageUtil
+     * @return
+     */
+    PageResult getCommentsLatest(PageQueryUtil pageUtil,Long newsId);
 }

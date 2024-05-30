@@ -86,15 +86,17 @@ public class CommentServiceImpl extends ServiceImpl<NewsCommentMapper, NewsComme
     }
 
     @Override
-    public PageResult getCommentsLasted(PageQueryUtil pageUtil) {
-        List<NewsComment> comments = this.findNewsCommentLasted(pageUtil);
+    public PageResult getCommentsLatest(PageQueryUtil pageUtil,Long newsId) {
+        List<NewsComment> comments = this.findNewsCommentLatest(pageUtil,newsId);
         int total = this.getTotalNewsComments(pageUtil);
         PageResult pageResult = new PageResult(comments, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
     }
-    public List<NewsComment> findNewsCommentLasted(Map<String, Object> params) {
+    //根据新闻id查找最新的十条评论
+    public List<NewsComment> findNewsCommentLatest(Map<String, Object> params,Long newsId) {
         QueryWrapper<NewsComment> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_deleted", 0)
+        queryWrapper.eq("news_id", newsId)
+                .eq("is_deleted", 0)
                 .eq("comment_status", 1)
                 .orderByDesc("create_time")
                 .last("limit 10");

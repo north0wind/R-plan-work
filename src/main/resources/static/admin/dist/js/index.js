@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: '/admin/lasted-news',
+        url: '/admin/latest-news',
         datatype: "json",
         colModel: [
             {label: 'id', name: 'newsId', index: 'newsId', width: 50, key: true, hidden: true},
