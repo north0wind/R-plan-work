@@ -2,7 +2,7 @@ package com.site.springboot.core.service.impl;
 
 import com.site.springboot.core.service.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 public class LikeServiceImpl implements LikeService {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public String likeNews(Long newsId, Long userId) {
         String key = "news:" + newsId + ":likes";
-        Long result = redisTemplate.opsForSet().add(key, userId);
+        Long result = redisTemplate.opsForSet().add(key, String.valueOf(userId));
         if (result != null && result == 1){
             redisTemplate.opsForValue().increment(key + ":count");
             return "success";
@@ -41,7 +41,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Long getNewsLikes(Long newsId) {
-        Long count = (Long) redisTemplate.opsForValue().get("news:" + newsId + ":likes:count");
+        Long count = Long.valueOf(redisTemplate.opsForValue().get("news:" + newsId + ":likes:count"));
         if (count == null){
             return 0L;
         }

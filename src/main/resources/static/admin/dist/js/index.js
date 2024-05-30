@@ -121,7 +121,7 @@ function editNews() {
 function findNews(query) {
     // 构造请求体
     fetch('/admin/search?keyword='+query, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },

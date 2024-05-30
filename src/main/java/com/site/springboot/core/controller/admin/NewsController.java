@@ -2,9 +2,12 @@ package com.site.springboot.core.controller.admin;
 
 import com.alibaba.excel.EasyExcel;
 import com.site.springboot.core.entity.News;
+import com.site.springboot.core.entity.NewsIndex;
 import com.site.springboot.core.poi.NewsExcel;
+import com.site.springboot.core.repository.NewsIndexRepository;
 import com.site.springboot.core.service.CategoryService;
 import com.site.springboot.core.service.NewsService;
+import com.site.springboot.core.service.impl.NewsIndexService;
 import com.site.springboot.core.util.PageQueryUtil;
 import com.site.springboot.core.util.Result;
 import com.site.springboot.core.util.ResultGenerator;
@@ -20,6 +23,7 @@ import jakarta.annotation.Resource;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,6 +36,12 @@ public class NewsController {
     private NewsService newsService;
     @Resource
     private CategoryService categoryService;
+
+    @Resource
+    private NewsIndexRepository newsIndexRepository;
+
+    @Resource
+    private NewsIndexService newsIndexService;
 
     @GetMapping("/news")
     public String list(HttpServletRequest request) {
@@ -175,14 +185,14 @@ public class NewsController {
     }
 
     //输入关键字进行搜索
-    @PostMapping("/search")
-    @ResponseBody
-    public Result search(@RequestParam("keyword") String keyword) {
-        if (!StringUtils.hasText(keyword)) {
-            return ResultGenerator.genFailResult("参数异常！");
-        }
-        return ResultGenerator.genSuccessResult(newsService.findNewsByKeyword(keyword));
-    }
+    // @PostMapping("/search")
+    // @ResponseBody
+    // public Result search(@RequestParam("keyword") String keyword) {
+    //     if (!StringUtils.hasText(keyword)) {
+    //         return ResultGenerator.genFailResult("参数异常！");
+    //     }
+    //     return ResultGenerator.genSuccessResult(newsService.findNewsByKeyword(keyword));
+    // }
 
     @GetMapping("/news/detail/{newsId}")
     public String detailPage(HttpServletRequest request, @PathVariable("newsId") Long newsId) {
@@ -193,6 +203,15 @@ public class NewsController {
         }
         request.setAttribute("newsDetail", newsDetail);
         return "index/detail";
+    }
+
+    @GetMapping("/search")
+    public List<NewsIndex> searchByEs(HttpServletRequest request,@RequestParam("keyword") String keyword){
+        request.setAttribute("path", "search");
+        request.setAttribute("keyword", keyword);
+        List<NewsIndex> byNewsConntentLike = newsIndexRepository.findByNewsContentLike(keyword);
+        request.setAttribute("newsList", byNewsConntentLike);
+        return byNewsConntentLike;
     }
 
 }
