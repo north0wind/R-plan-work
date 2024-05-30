@@ -20,7 +20,7 @@
 <header>
     <div class="widewrapper masthead">
         <div class="container">
-            <a th:href="@{/index}" id="logo">
+            <a th:href="@{/admin/index}" id="logo">
                 <img th:src="@{/index/img/logo.png}" class="logo-img" alt="logo">
             </a>
             <div id="mobile-nav-toggle" class="pull-right">
@@ -58,6 +58,11 @@
                             浏览
                         </div>
                         <th:block th:utext="${newsDetail.newsContent}"/>
+                    </div>
+                    <div>
+                        <button id="likeBtn">点赞</button>
+                        <button id="unlikeBtn" style="display: none;">取消点赞</button>
+                        <span id="likeCount"></span> 人点赞
                     </div>
                 </article>
                 <aside class="blog-rights clearfix">
@@ -98,6 +103,66 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+    // 假设URL格式为: /admin/news/detail/{newsId}
+    var urlParts = window.location.pathname.split('/');
+    var newsId = urlParts[urlParts.length - 1]; // 获取newsId
+
+    // 获取当前用户ID，例如从cookie或者session中
+    var userId = getCookie('userId'); // 假设你将userId存储在cookie中
+
+    // 下面的代码与之前相同
+    // 检查是否已点赞
+    $.get("/detail/isLiked/" + newsId, { userId: userId }, function(isLiked) {
+        if (isLiked) {
+            $('#likeBtn').hide();
+            $('#unlikeBtn').show();
+        } else {
+            $('#likeBtn').show();
+            $('#unlikeBtn').hide();
+        }
+    });
+
+    // 获取点赞次数
+    function updateLikeCount() {
+        $.get("/detail/likes/count/" + newsId, function(count) {
+            $('#likeCount').text(count);
+        });
+    }
+    updateLikeCount();
+
+    // 点赞按钮点击事件
+    $('#likeBtn').click(function() {
+        $.post("/detail/like/" + newsId, { userId: userId }, function() {
+            $('#likeBtn').hide();
+            $('#unlikeBtn').show();
+            updateLikeCount();
+        });
+    });
+
+    // 取消点赞按钮点击事件
+    $('#unlikeBtn').click(function() {
+        $.post("/detail/unlike/" + newsId, { userId: userId }, function() {
+            $('#likeBtn').show();
+            $('#unlikeBtn').hide();
+            updateLikeCount();
+        });
+    });
+
+    // 从cookie中获取userId的函数
+    function getCookie(name) {
+        var cookieArr = document.cookie.split(";");
+        for (var i = 0; i < cookieArr.length; i++) {
+            var cookiePair = cookieArr[i].split("=");
+            if (name == cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+        return null;
+    }
+});
+</script>
 <script th:src="@{/index/js/jquery.min.js}"></script>
 <script th:src="@{/index/js/bootstrap.min.js}"></script>
 <script th:src="@{/index/js/modernizr.js}"></script>

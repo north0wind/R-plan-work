@@ -10,7 +10,7 @@ $(function () {
             {label: '添加时间', name: 'createTime', index: 'createTime', width: 80},
             {label: '操作', name: 'actions', index: 'actions', width: 60, formatter: actionFormatter, align: 'left', sortable: false, search: false}
         ],
-        height: 150,
+        height: 700,
         rowNum: 10,
         rowList: [10, 20, 50],
         styleUI: 'Bootstrap',
@@ -36,47 +36,47 @@ $(function () {
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
         }
     });
-    $("#jqGrid1").jqGrid({
-         url: '/admin/comments/list-lasted',
-         datatype: "json",
-         colModel: [
-             {label: 'id', name: 'commentId', index: 'commentId', width: 50, key: true, hidden: true},
-             {label: '评论内容', name: 'commentBody', index: 'commentBody', width: 60},
-              {label: '评论人名称', name: 'commentator', index: 'commentator', width: 20,align: 'center',},
-             {label: '评论时间', name: 'createTime', index: 'createTime', width: 80},
-//             {label: '状态', name: 'commentStatus', index: 'commentStatus', width: 60, formatter: statusFormatter}
-         ],
-         height: 150,
-         rowNum: 10,
-         rowList: [10, 20, 50],
-         styleUI: 'Bootstrap',
-         loadtext: '信息读取中...',
-         rownumbers: false,
-         rownumWidth: 20,
-         autowidth: true,
-//            multiselect: true,
-//            pager: "#jqGridPager",
-         jsonReader: {
-             root: "data.list",
-             page: "data.currPage",
-             total: "data.totalPage",
-             records: "data.totalCount"
-         },
-         prmNames: {
-             page: "page",
-             rows: "limit",
-             order: "order",
-         },
-         gridComplete: function () {
-             //隐藏grid底部滚动条
-             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
-         }
-     });
-
-
-    $(window).resize(function () {
-        $("#jqGrid1").setGridWidth($(".card-body").width());
-    });
+//    $("#jqGrid1").jqGrid({
+//         url: '/admin/comments/list-lasted',
+//         datatype: "json",
+//         colModel: [
+//             {label: 'id', name: 'commentId', index: 'commentId', width: 50, key: true, hidden: true},
+//             {label: '评论内容', name: 'commentBody', index: 'commentBody', width: 60},
+//              {label: '评论人名称', name: 'commentator', index: 'commentator', width: 20,align: 'center',},
+//             {label: '评论时间', name: 'createTime', index: 'createTime', width: 80},
+////             {label: '状态', name: 'commentStatus', index: 'commentStatus', width: 60, formatter: statusFormatter}
+//         ],
+//         height: 400,
+//         rowNum: 10,
+//         rowList: [10, 20, 50],
+//         styleUI: 'Bootstrap',
+//         loadtext: '信息读取中...',
+//         rownumbers: false,
+//         rownumWidth: 20,
+//         autowidth: true,
+////            multiselect: true,
+////            pager: "#jqGridPager",
+//         jsonReader: {
+//             root: "data.list",
+//             page: "data.currPage",
+//             total: "data.totalPage",
+//             records: "data.totalCount"
+//         },
+//         prmNames: {
+//             page: "page",
+//             rows: "limit",
+//             order: "order",
+//         },
+//         gridComplete: function () {
+//             //隐藏grid底部滚动条
+//             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+//         }
+//     });
+//
+//
+//    $(window).resize(function () {
+//        $("#jqGrid1").setGridWidth($(".card-body").width());
+//    });
 
     $(window).resize(function () {
         $("#jqGrid").setGridWidth($(".card-body").width());
