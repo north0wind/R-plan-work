@@ -66,7 +66,6 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         return (int)count(queryWrapper);
     }
 
-    @CacheEvict(value = "news", key = "'news:'+#ids", allEntries = false)
     @Override
     public Boolean deleteBatch(Integer[] ids) {
         return this.removeByIds(Arrays.asList(ids));
