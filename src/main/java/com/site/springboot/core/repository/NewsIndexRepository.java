@@ -1,6 +1,7 @@
 package com.site.springboot.core.repository;
 
 
+import com.site.springboot.core.entity.News;
 import com.site.springboot.core.entity.NewsIndex;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 

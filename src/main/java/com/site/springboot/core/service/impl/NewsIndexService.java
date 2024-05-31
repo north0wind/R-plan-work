@@ -8,7 +8,6 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.stereotype.Service;
@@ -47,17 +46,14 @@ public class NewsIndexService {
         }
         //同步数据库表记录
         List<News> newsList = newsMapper.selectList(new QueryWrapper<>());
-        if (newsList.size() > 0){
+        if (!newsList.isEmpty()){
             List<NewsIndex> newsIndexList = new ArrayList<>();
-            newsIndexList.forEach(news -> {
+            newsList.forEach(news -> {
                 NewsIndex newsIndex = new NewsIndex();
                 BeanUtils.copyProperties(news, newsIndex);
                 newsIndexList.add(newsIndex);
             });
             template.save(newsIndexList);
         }
-        //ID查询
-        NewsIndex newsIndex = template.get("10", NewsIndex.class);
-        log.info("查询结果{}",newsIndex);
     }
 }

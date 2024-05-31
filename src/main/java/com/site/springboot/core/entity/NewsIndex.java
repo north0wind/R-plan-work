@@ -32,7 +32,7 @@ public class NewsIndex implements Serializable {
     @Field(type= FieldType.Long)
     private Long newsId;
 
-    @Field(type= FieldType.Text,analyzer = "ik_smart")
+    @Field(type= FieldType.Text,searchAnalyzer = "ik_smart")
     private String newsTitle;
 
     @Field(type= FieldType.Long)
@@ -41,7 +41,7 @@ public class NewsIndex implements Serializable {
     @Field(type= FieldType.Text)
     private String newsCoverImage;
 
-    @Field(type= FieldType.Text,analyzer = "ik_smart")
+    @Field(type = FieldType.Text, searchAnalyzer = "ik_smart")
     private String newsContent;
 
     @Field(type= FieldType.Byte)
