@@ -5,9 +5,11 @@ import com.site.springboot.core.entity.NewsIndex;
 import com.site.springboot.core.repository.NewsIndexRepository;
 import com.site.springboot.core.service.NewsService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +34,13 @@ public class ApplicationTest {
 
     @Test
     public void testQuery(){
-        List<NewsIndex> newsList = newsIndexRepository.findByNewsContentLike("测试");
+        List<NewsIndex> byNewsContentLike = newsIndexRepository.findByNewsContentLike("测试");
+        List<News> newsList = new ArrayList<>();
+        for (NewsIndex newsIndex : byNewsContentLike){
+            News news = new News();
+            BeanUtils.copyProperties(newsIndex, news);
+            newsList.add(news);
+        }
         newsList.forEach(System.out::println);
     }
 

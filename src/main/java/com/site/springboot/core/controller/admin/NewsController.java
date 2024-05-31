@@ -14,6 +14,7 @@ import com.site.springboot.core.util.ResultGenerator;
 import com.site.springboot.core.vo.NewsDetail;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -24,6 +25,7 @@ import jakarta.annotation.Resource;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -207,12 +209,18 @@ public class NewsController {
     }
 
     @GetMapping("/search")
-    public List<NewsIndex> searchByEs(HttpServletRequest request,@RequestParam("keyword") String keyword){
+    public List<News> searchByEs(HttpServletRequest request,@RequestParam("keyword") String keyword){
         request.setAttribute("path", "search");
         request.setAttribute("keyword", keyword);
-        List<NewsIndex> byNewsConntentLike = newsIndexRepository.findByNewsContentLike(keyword);
-        request.setAttribute("newsList", byNewsConntentLike);
-        return byNewsConntentLike;
+        List<NewsIndex> byNewsContentLike = newsIndexRepository.findByNewsContentLike(keyword);
+        List<News> newsList = new ArrayList<>();
+        for (NewsIndex newsIndex : byNewsContentLike){
+            News news = new News();
+            BeanUtils.copyProperties(newsIndex, news);
+            newsList.add(news);
+        }
+        request.setAttribute("newsList", newsList);
+        return newsList;
     }
 
 }
